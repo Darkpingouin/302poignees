@@ -17,3 +17,13 @@ pour la constuction des matrices),
 Si deux noms sont donnés en arguments au programme, on affichera le degré de
 séparation (la taille du plus court chemin) entre les deux personnes, ou -1 s’ils
 ne sont pas liés.
+
+Usage
+
+./302poignees file name1 name2
+
+![image2](https://cloud.githubusercontent.com/assets/15813261/19431064/271044c4-9457-11e6-9d69-524c07321207.png)
+
+./302poignees file n
+
+![image1](https://cloud.githubusercontent.com/assets/15813261/19431065/2712b452-9457-11e6-89c9-4f65e84e9212.png)
