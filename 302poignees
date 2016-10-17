@@ -1,0 +1,171 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+
+import sys
+import os.path
+
+# Gestion d'erreur
+
+if len(sys.argv) == 3 or len(sys.argv) == 4 :
+    if not (os.path.isfile(sys.argv[1])):
+        sys.stderr.write("\033[1;31m[ ")
+        sys.stderr.write(sys.argv[1])
+        sys.stderr.write("\033[1;31m ] No such file or directory\n\033[0m")
+        exit(84)
+    f = open(sys.argv[1], "r")
+    printit = 0
+    nb = 100
+    if len(sys.argv) == 4:
+        name1 = sys.argv[2]
+        name2 = sys.argv[3]
+    else:
+        try:
+            nb = int(sys.argv[2])
+        except:
+            sys.stderr.write("\033[1;31m[ ")
+            sys.stderr.write(sys.argv[2])
+            sys.stderr.write("\033[1;31m ] Is not a number\n\033[0m")           
+            exit(84)
+        if (nb < 0):
+            sys.stderr.write("\033[1;31m[ ")
+            sys.stderr.write(sys.argv[2])
+            sys.stderr.write("\033[1;31m ] Is not a positive number\n\033[0m")      
+            exit(84)
+
+        printit = 1
+else:
+    sys.stderr.write("\033[1;31mUsage: ./302poignees file n\n\033[0m")
+    sys.stderr.write("\033[1;31mUsage: ./301poignees file name1 name2\n\033[0m")
+    exit(84)
+
+#Parsing 
+
+pars = []
+myList = []
+dico = []
+Friends1 = [] 
+Friends2 = [] 
+
+for line in f :
+    line.replace("\n","")
+    dico.append(line.replace("amie", "ami").replace(" est ami avec ", "-").replace("\n", ""));
+    pars.append(line.replace("amie", "ami").replace(" est ami avec ", "-").replace("\n", "").split("-"))
+
+for n in pars :
+    myList.append(n[0])
+    myList.append(n[1])
+
+dico.sort()
+myList = list(set(myList));
+myList.sort()
+if (len(sys.argv) == 4):
+    nb = len(myList) * len(myList)
+
+#Liste + ordre alpha
+if printit == 1:
+    for name in myList :
+        print name
+    sys.stdout.write("\n")
+for line in dico :
+    tmp1, tmp2 = line.split('-')
+    Friends1.append(tmp1)
+    Friends2.append(tmp2)
+            
+#Matrice adjacente
+w, h = len(myList), len(myList)
+matrice = [[0 for x in range(w)] for y in range(h)] 
+y = 0
+for toto in myList :
+    line = 0
+    x = 0
+    for name in myList :
+        i = 0
+        line+= 1
+        found = 0
+        while i < len(Friends1) and found != 1:
+            if Friends1[i] == name and Friends2[i] == toto:
+                found = 1
+                matrice[y][x] = 1
+            elif Friends2[i] == name and Friends1[i] == toto:
+                found = 1
+                matrice[y][x] = 1
+            i+=1
+        if found == 0:
+            matrice[y][x] = 0
+        x+=1
+        if line != len(myList):
+            j =2
+    y+=1
+
+
+w, h = len(myList), len(myList)
+D = [[0 for x in range(w)] for y in range(h)] 
+
+for x in range(len(myList)):
+    for y in range(len(myList)):
+        D[x][y] = nb + 1
+    for y in range(len(myList)):
+        if (matrice[x][y] > 0):
+            D[x][y] = 1
+    D[x][x] = 0
+for z in range(len(myList)):
+    for x in range(len(myList)):
+        for y in range(len(myList)):
+            D[x][y] = min(D[x][y], D[x][z] + D[z][y])
+
+for x in range(len(myList)):
+    for y in range(len(myList)):
+        if (D[x][y] > nb):
+            D[x][y] = 0
+
+#Degre de separation
+
+x = -1
+y = -1
+i = 0
+degre = -1
+
+if printit == 0:
+    for name in myList:
+        if (name == name1) :
+            x = i
+        if (name == name2) :
+            y = i
+        i+= 1
+    if (x == -1 or y == -1) :
+        degre = -1
+    else:
+        degre = D[y][x]
+    sys.stdout.write("degré de séparation entre ");
+    sys.stdout.write(name1);
+    sys.stdout.write(" et ");
+    sys.stdout.write(name2);
+    sys.stdout.write(" : ");
+    sys.stdout.write(str(degre));
+    sys.stdout.write("\n");
+
+#Print des Matrice
+else:
+    y = 0
+    while y < len(myList):
+        x = 0
+        while x < len(myList):
+            sys.stdout.write(str(matrice[y][x]))
+            if (x != len(myList)-1):
+                sys.stdout.write(" ");
+            x+=1
+        sys.stdout.write("\n");
+        y+=1
+
+    sys.stdout.write("\n");
+    y = 0
+    while y < len(myList):
+        x = 0
+        while x < len(myList):
+            sys.stdout.write(str(D[y][x]))
+            if (x != len(myList)-1):
+                sys.stdout.write(" ");
+            x+=1
+        sys.stdout.write("\n");
+        y+=1
+
