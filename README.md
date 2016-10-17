@@ -27,3 +27,6 @@ Usage
 ./302poignees file n
 
 ![image1](https://cloud.githubusercontent.com/assets/15813261/19431065/2712b452-9457-11e6-89c9-4f65e84e9212.png)
+
+#Note
+programme: 19,46/20 (34/35 test passés) pitch : 8/8
